@@ -1,0 +1,5 @@
+Hand made annotation processing tool (APT Processor)
+Task - to check public fields using the annotation
+Annotation - @PrivateFieldsOnly
+Target annotation - class
+Shows warning: 'Encapsulation violation. Make all public fields private or protected! '
