@@ -1,5 +1,6 @@
 package com.privatefields.processor;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -14,7 +15,7 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic.Kind;
 
-@SupportedAnnotationTypes({"com.privatefields.annotation.PrivateFieldsOnly"})
+@SupportedAnnotationTypes({ "com.privatefields.annotation.PrivateFieldsOnly" })
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class PrivateFieldsOnlyProcessor extends AbstractProcessor {
 
@@ -27,33 +28,20 @@ public class PrivateFieldsOnlyProcessor extends AbstractProcessor {
 
 	@Override
 	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-		
-		
-//		 for (TypeElement ann : annotations) {
-//             Set<? extends Element> annotatedElements = roundEnv.getElementsAnnotatedWith(ann);
-//
-//             for (Element ae : annotatedElements) {
-//                 List<? extends Element> innerElements = ae.getEnclosedElements();
-//
-//                 for (Element ie : innerElements) {
-//                     Set<Modifier> modifiers = ie.getModifiers();
-//                     if (modifiers.contains(Modifier.PUBLIC)) {
-//                         messager.printMessage(Kind.ERROR,
-//                                 "Incapsulation violation. Make all public fields private or protected", ie);
-//                     }
-//                 }
-//             }
-//         }
-//       return true;
-//	}
 
 		for (TypeElement typeElement : annotations) {
 			Set<? extends Element> annotatedElements = roundEnv.getElementsAnnotatedWith(typeElement);
 
-			for (Element element : annotatedElements) {
-				Set<Modifier> modifiers = element.getModifiers();
-				if (modifiers.contains(Modifier.PUBLIC)) messager.printMessage(Kind.ERROR,
-							"Incapsulation violation. Make all public fields private or protected", element);
+			for (Element aElement : annotatedElements) {
+				List<? extends Element> innerElements = aElement.getEnclosedElements();
+
+				for (Element iElement : innerElements) {
+					Set<Modifier> modifiers = iElement.getModifiers();
+					if (modifiers.contains(Modifier.PUBLIC)) {
+						messager.printMessage(Kind.ERROR,
+								"Incapsulation violation. Make all public fields private or protected", iElement);
+					}
+				}
 			}
 		}
 		return true;
